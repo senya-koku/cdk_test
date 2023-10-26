@@ -1,6 +1,6 @@
 import os
 from aws_cdk import core, aws_lambda as _lambda, aws_apigateway as apigateway, aws_iam as iam
-from aws_cdk.aws_apigateway import CfnUsagePlan
+from aws_cdk.aws_apigateway import CfnUsagePlan, CfnUsagePlanKey
 
 
 API_KEY_ID = os.environ.get("API_KEY_ID")
@@ -58,13 +58,14 @@ class ApiStack(core.Stack):
         # existing_usage_plan.add_stage(api=api, stage=api.deployment_stage)
 
         # 既存の使用量プランを取得
-        existing_usage_plan = CfnUsagePlan.from_usage_plan_attributes(self, "ExistingUsagePlan", usage_plan_id=USAGE_PLAN_ID)
+        #existing_usage_plan = CfnUsagePlan.from_usage_plan_attributes(self, "ExistingUsagePlan", usage_plan_id=USAGE_PLAN_ID)
 
         # 使用量プランにAPIステージを関連付ける
-        api_stage = apigateway.CfnUsagePlanKey(self, "ApiStageKey",
+        api_stage = CfnUsagePlanKey(
+            self, "ApiStageKey",
             key_id=existing_api_key.key_id,
             key_type="API_KEY",
-            usage_plan_id=existing_usage_plan.ref,
+            usage_plan_id=USAGE_PLAN_ID,
             value=api.deployment_stage.stage_name
         )
 
