@@ -1,5 +1,5 @@
 from aws_cdk import core
-from cdk.test_stack import ApiStack
+from test_stack import ApiStack
 
 class MyCdkApp(core.App):
     def __init__(self, **kwargs):
