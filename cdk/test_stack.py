@@ -2,7 +2,7 @@ from aws_cdk import core, aws_lambda as _lambda, aws_apigateway as apigateway, a
 
 class ApiStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs):
-        super().__init__(scope, id, **kwargs)
+        super().__init__(scope, id, env=core.Environment(region="ap-northeast-1"), **kwargs)
         
         # APIGatewayで呼ばれるlambda
         lambda_function = _lambda.Function(
