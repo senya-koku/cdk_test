@@ -1,4 +1,3 @@
-aws-cdk==1.204.0
-# aws-cdk.core==1.204.0
-# aws-cdk.aws_lambda==1.204.0
-# aws-cdk.aws_apigateway==1.204.0
+aws-cdk.core==1.129.0
+aws-cdk.aws_lambda==1.129.0
+aws-cdk.aws_apigateway==1.129.0
