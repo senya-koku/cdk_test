@@ -12,7 +12,7 @@ class ApiStack(core.Stack):
             self, 'HelloHandler',
             runtime=_lambda.Runtime.PYTHON_3_9,
             function_name='Hello',
-            code=_lambda.Code.from_asset('lambda'),
+            code=_lambda.Code.from_asset('../lambda'),
             handler='hello.handler',
         )
 
