@@ -48,7 +48,7 @@ jobs:
       run: |
         # 1. 必要な依存関係のインストール
         cd cdk
-        pip install -r cdk/requirements.txt
+        pip install -r requirements.txt
 
         # AWS CDKのインストール
         npm install -g aws-cdk
