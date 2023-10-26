@@ -1,5 +1,7 @@
 import os
 from aws_cdk import core, aws_lambda as _lambda, aws_apigateway as apigateway, aws_iam as iam
+from aws_cdk.aws_apigateway import CfnUsagePlan
+
 
 API_KEY_ID = os.environ.get("API_KEY_ID")
 USAGE_PLAN_ID = os.environ.get("USAGE_PLAN_ID")
@@ -46,22 +48,24 @@ class ApiStack(core.Stack):
         # 既存のAPIキーを取得
         existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
 
-        # 既存の使用量プランを取得
-        existing_usage_plan = apigateway.UsagePlan.from_usage_plan_id(self, "ExistingUsagePlan", USAGE_PLAN_ID)
+        # # 既存の使用量プランを取得
+        # existing_usage_plan = apigateway.UsagePlan.from_usage_plan_id(self, "ExistingUsagePlan", USAGE_PLAN_ID)
 
-        # 使用量プランにAPIキーを関連付ける
-        existing_usage_plan.add_api_key(existing_api_key)
+        # # 使用量プランにAPIキーを関連付ける
+        # existing_usage_plan.add_api_key(existing_api_key)
+
+        # # 使用量プランにAPIステージを関連付ける
+        # existing_usage_plan.add_stage(api=api, stage=api.deployment_stage)
+
+        # 既存の使用量プランを取得
+        existing_usage_plan = CfnUsagePlan.from_usage_plan_attributes(self, "ExistingUsagePlan", usage_plan_id=USAGE_PLAN_ID)
 
         # 使用量プランにAPIステージを関連付ける
-        existing_usage_plan.add_stage(api=api, stage=api.deployment_stage)
-
-        # リソースにLambda関数を結びつける
-        api_integration = apigateway.LambdaIntegration(lambda_function)
-        api_method = api_root.add_method("POST", api_integration, 
-            api_key_required=True, # APIキーが必要
-            request_parameters={
-                "method.request.querystring.id1": True
-            }
+        api_stage = apigateway.CfnUsagePlanKey(self, "ApiStageKey",
+            key_id=existing_api_key.key_id,
+            key_type="API_KEY",
+            usage_plan_id=existing_usage_plan.ref,
+            value=api.deployment_stage.stage_name
         )
 
         # # リソースにLambda関数を結びつける
