@@ -1,11 +1,8 @@
-from aws_cdk import core
-from aws_cdk import aws_lambda as _lambda
-from aws_cdk import aws_apigateway as apigateway
-from aws_cdk import aws_iam as iam
+from aws_cdk import core, aws_lambda as _lambda, aws_apigateway as apigateway, aws_iam as iam
 
 class ApiStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs):
-        super().__init__(scope, id, env=core.Environment(region="ap-northeast-1"), **kwargs) 
+        super().__init__(scope, id, **kwargs)
         
         # APIGatewayで呼ばれるlambda
         lambda_function = _lambda.Function(
@@ -34,9 +31,18 @@ class ApiStack(core.Stack):
         )
 
         # apiGatewayを用意する
-        api = apigateway.LambdaRestApi(
-            self, 'kokusenya_test',
-            handler=lambda_function,
-            policy=policy
+        api = apigateway.RestApi(self, 'kokusenya_test', 
+            deploy_options=apigateway.StageOptions(stage_name="dev")
         )
+        
+        # リソースパスの作成
+        api_root = api.root.add_resource("api").add_resource("v1").add_resource("getdefaultrecommend")
+        
+        # リソースにLambda関数を結びつける
+        api_root.add_method("POST", apigateway.LambdaIntegration(lambda_function), 
+            request_parameters={
+                "method.request.querystring.user_id": True
+            }
+        )
+
 
