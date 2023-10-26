@@ -5,8 +5,8 @@ from aws_cdk import aws_iam as iam
 
 class ApiStack(core.Stack):
     def __init__(self, scope: core.Construct, id: str, **kwargs):
-        super().__init__(scope, id, **kwargs)
-
+        super().__init__(scope, id, env=core.Environment(region="ap-northeast-1"), **kwargs) 
+        
         # APIGatewayで呼ばれるlambda
         lambda_function = _lambda.Function(
             self, 'HelloHandler',

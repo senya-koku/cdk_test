@@ -6,7 +6,7 @@ class MyCdkApp(core.App):
         super().__init__(**kwargs)
 
         # スタックのインスタンスを作成し、アプリケーションに関連付ける
-        ApiStack(self, "MyApiStack")
+        ApiStack(self, "kokusenya_test")
 
 # アプリケーションのインスタンスを作成
 app = MyCdkApp()
