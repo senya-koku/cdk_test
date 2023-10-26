@@ -22,7 +22,7 @@ class ApiStack(core.Stack):
         goodmorning_lambda = _lambda.Function(
             self, 'GoodMorningHandler',
             runtime=_lambda.Runtime.PYTHON_3_9,
-            function_name='goodmorning_function',
+            function_name='kokusenya_test2',
             code=_lambda.Code.from_asset('../lambda'),
             handler='goodmorning.handler',  # goodmorning.pyのhandler関数を指定
         )
@@ -52,8 +52,9 @@ class ApiStack(core.Stack):
         existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
 
         # リソースパスの作成
-        hello_resource = api.root.add_resource("api").add_resource("v1").add_resource("hello")
-        good_morning_resource = api.root.add_resource("api").add_resource("v1").add_resource("goodmorning")
+        api_v1 = api.root.add_resource("api").add_resource("v1")
+        hello_resource = api_v1.add_resource("hello")
+        good_morning_resource = api_v1.add_resource("goodmorning")
 
 
         # リソースにLambda関数を結びつける
