@@ -1,4 +1,4 @@
-name: CI
+name: mock Api&Lambda
 
 on:
   push:
@@ -22,23 +22,23 @@ jobs:
       run: |
         python -m pip install --upgrade pip
 
-    # node.js
-    - name: Use Node.js 10.x
-      uses: actions/setup-node@v1
-      with:
-        node-version: 10.x
+    # # node.js
+    # - name: Use Node.js 10.x
+    #   uses: actions/setup-node@v1
+    #   with:
+    #     node-version: 10.x
 
-    # go
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
+    # # go
+    # - name: Set up Go 1.13
+    #   uses: actions/setup-go@v1
+    #   with:
+    #     go-version: 1.13
+    #   id: go
 
     # aws cli & cdk
     - name: aws cli install
       run: |
-        pip install awscli --upgrade --user    
+        pip install awscli --upgrade --user
         npm install -g aws-cdk
 
     - name: build and deploy
@@ -46,8 +46,17 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        GOOS=linux GOARCH=amd64 go build -o ./bin/main ./src
+        # 1. 必要な依存関係のインストール
         cd cdk
-        npm install --save typescript
-        npx cdk deploy --require-approval "never"
+        pip install -r cdk/requirements.txt
+
+        # AWS CDKのインストール
+        npm install -g aws-cdk
+
+        # 2. CDKアプリのビルド
+        # TypeScriptの場合、以下の行を追加
+        # npm run build
+
+        # 3. CDKアプリのデプロイ
+        cdk deploy --all
 
