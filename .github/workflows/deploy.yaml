@@ -58,5 +58,6 @@ jobs:
 
         # 3. CDKアプリのデプロイ
         #cdk deploy --all
+        cd cdk
         cdk deploy --all --app "python3 app.py"
 
