@@ -58,5 +58,6 @@ jobs:
         # npm run build
 
         # 3. CDKアプリのデプロイ
-        cdk deploy --all
+        #cdk deploy --all
+        cdk deploy --all --app "python3 app.py"
 
