@@ -11,7 +11,7 @@ class ApiStack(core.Stack):
         lambda_function = _lambda.Function(
             self, 'HelloHandler',
             runtime=_lambda.Runtime.PYTHON_3_9,
-            function_name='Hello',
+            function_name='kokusenya_test',
             code=_lambda.Code.from_asset('../lambda'),
             handler='hello.handler',
         )
@@ -35,7 +35,7 @@ class ApiStack(core.Stack):
 
         # apiGatewayを用意する
         api = apigateway.LambdaRestApi(
-            self, 'hello-api',
+            self, 'kokusenya_test',
             handler=lambda_function,
             policy=policy
         )
