@@ -4,6 +4,7 @@ aws cdk を使って、API Gateway + Lambdaの最小限の構成を実現する�
 
 # 構成
 tree
+```
 .
 ├── README.md
 ├── cdk
@@ -14,3 +15,5 @@ tree
 └── lambda
     ├── goodmorning.py
     └── hello.py
+
+```
