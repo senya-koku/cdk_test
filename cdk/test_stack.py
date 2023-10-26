@@ -55,20 +55,48 @@ class ApiStack(core.Stack):
         api_v1 = api.root.add_resource("api").add_resource("v1")
         hello_resource = api_v1.add_resource("hello")
         good_morning_resource = api_v1.add_resource("goodmorning")
+        
+        
+        # API Gatewayのモデルを定義（リクエストボディの検証）
+        request_body_model = api.add_model(
+            "RequestBodyModel",
+            content_type="application/json",
+            model_name="RequestBodyModel",
+            schema=apigateway.JsonSchema(
+                schema=apigateway.JsonSchemaVersion.DRAFT4,
+                title="requestBody",
+                type=apigateway.JsonSchemaType.OBJECT,
+                properties={
+                    "list_ids": apigateway.JsonSchema(
+                        type=apigateway.JsonSchemaType.ARRAY,
+                        items=apigateway.JsonSchema(type=apigateway.JsonSchemaType.STRING)
+                    ),
+                    "id1": apigateway.JsonSchema(
+                        type=apigateway.JsonSchemaType.STRING
+                    ),
+                    "options": apigateway.JsonSchema(
+                        type=apigateway.JsonSchemaType.OBJECT,
+                        properties={
+                            "optionKey": apigateway.JsonSchema(
+                                type=apigateway.JsonSchemaType.STRING
+                            )
+                            # 他のキーもここに追加できます。
+                        }
+                    )
+                },
+                required=["list_ids", "id1"]  # 必須のフィールド
+            )
+        )
 
 
         # リソースにLambda関数を結びつける
         hello_resource.add_method("POST", apigateway.LambdaIntegration(hello_lambda),
             api_key_required=True,  # APIキーが必要とする設定
-            request_parameters={
-                "method.request.querystring.id1": True
-            }
+            request_models={"application/json": request_body_model}
         )
         good_morning_resource.add_method("POST", apigateway.LambdaIntegration(goodmorning_lambda),
             api_key_required=True,  # APIキーが必要とする設定
-            request_parameters={
-                "method.request.querystring.id1": True
-            }
+            request_models={"application/json": request_body_model}
         )
 
         # APIキーをAPIステージに関連付ける
