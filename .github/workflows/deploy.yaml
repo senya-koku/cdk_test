@@ -47,7 +47,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         # 1. 必要な依存関係のインストール
-        pip install -r cdk・requirements.txt
+        pip install -r cdk/requirements.txt
 
         # AWS CDKのインストール
         npm install -g aws-cdk
