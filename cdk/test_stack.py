@@ -11,12 +11,20 @@ class ApiStack(core.Stack):
         super().__init__(scope, id, env=core.Environment(region="ap-northeast-1"), **kwargs)
         
         # APIGatewayで呼ばれるlambda
-        lambda_function = _lambda.Function(
+        hello_lambda = _lambda.Function(
             self, 'HelloHandler',
             runtime=_lambda.Runtime.PYTHON_3_9,
             function_name='kokusenya_test',
             code=_lambda.Code.from_asset('../lambda'),
             handler='hello.handler',
+        )
+        
+        goodmorning_lambda = _lambda.Function(
+            self, 'GoodMorningHandler',
+            runtime=_lambda.Runtime.PYTHON_3_9,
+            function_name='goodmorning_function',
+            code=_lambda.Code.from_asset('../lambda'),
+            handler='goodmorning.handler',  # goodmorning.pyのhandler関数を指定
         )
 
         # IP制限のポリシーを定義
@@ -38,18 +46,24 @@ class ApiStack(core.Stack):
 
         # apiGatewayを用意する
         api = apigateway.RestApi(self, 'kokusenya_test',
-        deploy_options=apigateway.StageOptions(stage_name="dev"),
-        policy=policy  # この行を追加
-    )
+        deploy_options=apigateway.StageOptions(stage_name="dev"),policy=policy)
 
         # 既存のAPIキーを参照
         existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
 
         # リソースパスの作成
-        api_root = api.root.add_resource("api").add_resource("v1").add_resource("hello")
+        hello_resource = api.root.add_resource("api").add_resource("v1").add_resource("hello")
+        good_morning_resource = api.root.add_resource("api").add_resource("v1").add_resource("goodmorning")
+
 
         # リソースにLambda関数を結びつける
-        api_method = api_root.add_method("POST", apigateway.LambdaIntegration(lambda_function), 
+        hello_resource.add_method("POST", apigateway.LambdaIntegration(hello_lambda),
+            api_key_required=True,  # APIキーが必要とする設定
+            request_parameters={
+                "method.request.querystring.id1": True
+            }
+        )
+        good_morning_resource.add_method("POST", apigateway.LambdaIntegration(goodmorning_lambda),
             api_key_required=True,  # APIキーが必要とする設定
             request_parameters={
                 "method.request.querystring.id1": True
