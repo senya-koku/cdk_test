@@ -41,14 +41,19 @@ class ApiStack(core.Stack):
         )
 
         # リソースパスの作成
-        api_root = api.root.add_resource("api").add_resource("v1").add_resource("getdefaultrecommend")
+        api_root = api.root.add_resource("api").add_resource("v1").add_resource("hello")
 
+        # 既存のAPIキーを取得
         existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
-        existing_usage_plan = apigateway.UsagePlan.from_usage_plan_id(self, "ExistingUsagePlan", usage_plan_id=USAGE_PLAN_ID)
 
+        # 既存の使用量プランを取得
+        existing_usage_plan = apigateway.UsagePlan.from_usage_plan_id(self, "ExistingUsagePlan", USAGE_PLAN_ID)
 
-        # 使用計画をデプロイステージに関連付ける
-        existing_usage_plan.add_api_stage(stage=api.deployment_stage, throttle=None)
+        # 使用量プランにAPIキーを関連付ける
+        existing_usage_plan.add_api_key(existing_api_key)
+
+        # 使用量プランにAPIステージを関連付ける
+        existing_usage_plan.add_stage(api=api, stage=api.deployment_stage)
 
         # リソースにLambda関数を結びつける
         api_integration = apigateway.LambdaIntegration(lambda_function)
