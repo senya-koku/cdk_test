@@ -5,6 +5,10 @@ on:
     branches:
       - master
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build:
 
@@ -16,7 +20,7 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        aws-region: us-east-1 # or your AWS region
+        aws-region: ap-northeast-1 # or your AWS region
         role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT }}:role/adrian-github-oidc
         role-session-name: GitHubActions
 
