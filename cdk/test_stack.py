@@ -1,8 +1,8 @@
 import os
 from aws_cdk import core, aws_lambda as _lambda, aws_apigateway as apigateway, aws_iam as iam
 
-API_KEY_ID = os.environ.get("API_KEY_ID")
-USAGE_PLAN_ID = os.environ.get("USAGE_PLAN_ID")
+# API_KEY_ID = os.environ.get("API_KEY_ID")
+# USAGE_PLAN_ID = os.environ.get("USAGE_PLAN_ID")
 
 
 class ApiStack(core.Stack):
@@ -49,7 +49,7 @@ class ApiStack(core.Stack):
         deploy_options=apigateway.StageOptions(stage_name="dev"),policy=policy)
 
         # 既存のAPIキーを参照
-        existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
+        # existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
 
         # リソースパスの作成
         api_v1 = api.root.add_resource("api").add_resource("v1")
@@ -99,6 +99,6 @@ class ApiStack(core.Stack):
             request_models={"application/json": request_body_model}
         )
 
-        # APIキーをAPIステージに関連付ける
-        usage_plan = api.add_usage_plan("UsagePlan", api_key=existing_api_key)
-        usage_plan.add_api_stage(stage=api.deployment_stage)
+        # # APIキーをAPIステージに関連付ける
+        # usage_plan = api.add_usage_plan("UsagePlan", api_key=existing_api_key)
+        # usage_plan.add_api_stage(stage=api.deployment_stage)
