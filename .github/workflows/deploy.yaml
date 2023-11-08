@@ -53,9 +53,9 @@ jobs:
         npm install -g aws-cdk
 
     - name: Deploy to AWS
-      env:
-        API_KEY_ID: ${{ secrets.API_KEY_ID }}
-        USAGE_PLAN_ID: ${{ secrets.USAGE_PLAN_ID }}
+      # env:
+      #   API_KEY_ID: ${{ secrets.API_KEY_ID }}
+      #   USAGE_PLAN_ID: ${{ secrets.USAGE_PLAN_ID }}
       run: |
         # 1. 必要な依存関係のインストール
         pip install -r cdk/requirements.txt
