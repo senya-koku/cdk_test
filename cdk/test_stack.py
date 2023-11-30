@@ -44,9 +44,10 @@ class ApiStack(core.Stack):
             ]
         )
 
+        stage_name = os.getenv("STAGE_NAME")
         # apiGatewayを用意する
         api = apigateway.RestApi(self, 'kokusenya_test',
-        deploy_options=apigateway.StageOptions(stage_name="dev"),policy=policy)
+        deploy_options=apigateway.StageOptions(stage_name=stage_name),policy=policy)
 
         # 既存のAPIキーを参照
         # existing_api_key = apigateway.ApiKey.from_api_key_id(self, "ExistingApiKey", api_key_id=API_KEY_ID)
